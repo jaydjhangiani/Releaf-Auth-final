@@ -1,28 +1,24 @@
-const nodemailer = require('nodemailer');
+const sgMail = require("@sendgrid/mail");
 
 const sendEmail = (options) => {
-    const transpoter = nodemailer.createTransport({
-        service: process.env.EMAIL_SERVICE,
-        auth: {
-            user: process.env.EMAIL_USERNAME,
-            pass: process.env.EMAIL_PASSWORD
-        }
-    })
+  sgMail.setApiKey(process.env.EMAIL_PASSWORD);
 
-    const mailOptions = {
-        from: process.env.EMAIL_FROM,
-        to: options.to,
-        subject: options.subject,
-        html: options.text,
+  const msg = {
+    to: options.to,
+    from: process.env.EMAIL_FROM,
+    templateId: process.env.TEMPLATE_ID,
+    dynamic_template_data: {
+      name: options.name,
+    },
+  };
+
+  sgMail.send(msg, (error, result) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("That's wassup!");
     }
-
-    transpoter.sendMail(mailOptions, function(err,info){
-        if(err){
-            console.log(err)
-        }else{
-            console.log(info)
-        }
-    });
-}
+  });
+};
 
 module.exports = sendEmail;

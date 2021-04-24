@@ -6,7 +6,7 @@ connectDB = async () => {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: true,
-    });
+    })
 
     console.log("Mongo DB Connected")
 }

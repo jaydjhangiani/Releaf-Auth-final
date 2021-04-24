@@ -1,0 +1,8 @@
+{
+    "student": "Student",
+    "buisness": "Buisness",
+    "medical-professional": "Medical Professional",
+    "academic-professional": "Academical Professional",
+    "arts-medial":"Arts/Media",
+    "other": "Other"
+}

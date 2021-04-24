@@ -56,7 +56,7 @@ UserSchema.methods.getSignedToken = function(){
         id: this._id
     }, process.env.JWT_SECRET,
     {
-        expiresIn: process.env.JWT_EXPIRE
+        expiresIn: process.env.JWT_TOKEN_EXPIRE
     })
 }
 

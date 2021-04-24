@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
-const PrivateScreen = ({history}) => {
+const PrivateScreen = () => {
     const [error,setError] = useState("");
     const [privateData, setPrivateData] = useState("");
+    const history = useHistory();
 
     useEffect(() => {
         if(!localStorage.getItem("authToken")){
@@ -18,10 +20,12 @@ const PrivateScreen = ({history}) => {
                 }
             }
 
-            console.log(localStorage.getItem("authToken"))
+            // console.log(localStorage.getItem("authToken"))
 
             try {
+
                 const {data} = await axios.get("http://localhost:5000/api/private/",config);
+                
                 setPrivateData(data.data)
                 console.log(privateData)
             } catch (error) {
@@ -32,19 +36,19 @@ const PrivateScreen = ({history}) => {
         }
 
         fetchPrivateData();
-    },[history])
+    },[history,privateData])
 
-    const logoutHandler = () => {
-        localStorage.removeItem("authToken");
-        history.push("/");
-    }
+    // const logoutHandler = () => {
+    //     localStorage.removeItem("authToken");
+    //     history.push("/");
+    // }
     
     return error ? (
         <span className="error-message">{error}</span>
     ) : (
         <>
             <div style={{background: "green" , color: "white"}}>{privateData}</div>
-            <button onClick={logoutHandler}>Logout</button>
+            {/* <button onClick={logoutHandler}>Logout</button> */}
         </>
     )
 }
