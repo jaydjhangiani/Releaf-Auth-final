@@ -6,6 +6,7 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import RegisterTypeScreen from "../screens/RegisterTypeScreen";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 import Footer from "./navigation/Footer";
 import Navbar from "./navigation/Navbar";
@@ -25,7 +26,8 @@ const Routing = () => {
       <Route exact path="/" component={HomeScreen} />
       <Route exact path="/contact" component={ContactScreen} />
       <Route exact path="/login" component={LoginScreen} />
-      <Route exact path="/register" component={RegisterScreen} />
+      <Route exact path="/register" component={RegisterTypeScreen} />
+      <Route exact path="/register/:type" component={RegisterScreen} />
       <Route
         exact
         path="/activate-account/:activateToken"

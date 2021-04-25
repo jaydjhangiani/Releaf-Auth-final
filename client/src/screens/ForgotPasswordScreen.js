@@ -1,10 +1,11 @@
-import axios from "axios";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+//assets
 import forgotPasswordImg from "../assets/img/forgotPassword.svg";
+//packages
+import axios from "axios";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Container, Grid, makeStyles } from "@material-ui/core";
+//components
 import Textfield from "../components/form/Textfield";
 import { ScreenContainer } from "../components/screen/Container";
 import { FormContainer } from "../components/form/Container";
@@ -13,9 +14,12 @@ import { FormBtn } from "../components/form/Button";
 import { FormH1 } from "../components/form/Heading";
 import { FormP } from "../components/form/Paragraph";
 import { FormWrapper } from "../components/form/Wrapper";
-
+//toast
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
+//UI styles
 const useStyles = makeStyles((theme) => ({
   formWrapper: {
     marginTop: theme.spacing(3),
@@ -26,10 +30,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//inital values
 const INITIAL_FORM_STATE = {
   email: "",
 };
 
+//validation schema
 const FORM_VALIDATION = Yup.object().shape({
   email: Yup.string().email("Invalid Email.").required("Required."),
 });
@@ -37,6 +43,7 @@ const FORM_VALIDATION = Yup.object().shape({
 const ForgotPasswordScreen = () => {
   const classes = useStyles();
 
+  //function to handle forgot password
   const forgotPasswordHandler = async (values) => {
     const config = {
       header: {
@@ -51,14 +58,8 @@ const ForgotPasswordScreen = () => {
         config
       );
       toast.success(data.data);
-      // setSuccess(data.data);
     } catch (error) {
       toast.error(error.response.data.error);
-      // setError(error.response.data.error);
-      // setEmail("");
-      // setTimeout(() => {
-      //   setError("");
-      // }, 5000);
     }
   };
 
@@ -105,98 +106,3 @@ const ForgotPasswordScreen = () => {
 };
 
 export default ForgotPasswordScreen;
-
-// const ForgotPasswordContainer = styled.div`
-//   width: 100%;
-//   margin: 100px auto;
-//   padding: 20px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-
-//   @media screen and (max-width: 780px) {
-//     margin-top: 30px;
-//   }
-
-//   @media screen and (max-width: 460px) {
-//     margin-top: 30px;
-//   }
-// `;
-
-// const ForgotPasswordFormContainer = styled.div`
-//   width: 80%;
-//   /* height: 70%; */
-//   padding: 1.5rem;
-//   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
-//   background: #fff;
-//   display: flex;
-//   align-items: center;
-//   flex-direction: row;
-//   border-radius: 25px;
-
-//   @media screen and (max-width: 760px) {
-//     /* height: 85%; */
-//     flex-direction: column;
-//   }
-
-//   @media screen and (max-width: 460px) {
-//     width: 90%;
-//     background: #fff;
-//   }
-// `;
-
-// const ForgotPasswordImg = styled.img`
-//   width: 55%;
-//   padding: 25px;
-
-//   @media screen and (max-width: 760px) {
-//     width: 100%;
-//     margin-bottom: 10px;
-//   }
-// `;
-
-// const ForgotPasswordForm = styled.div`
-//   width: 100%;
-// `;
-
-// const ForgotPasswordH1 = styled.h1`
-//   text-align: center;
-//   color: #01579b;
-//   margin-bottom: 10px;
-
-//   @media screen and (max-width: 760px) {
-//     font-size: 1.5rem;
-//   }
-// `;
-
-// const ForgotPasswordP = styled.p`
-//   margin: 5px auto;
-//   padding: 0 20px;
-//   font-size: 0.9rem;
-//   text-align: justify;
-//   color: #01579b;
-
-//   @media screen and (max-width: 760px) {
-//     font-size: 0.8rem;
-//   }
-// `;
-
-// const ForgotScreenBtn = styled.button`
-//   padding: 10px 20px;
-//   cursor: pointer;
-//   width: 100%;
-//   font-size: 1rem;
-//   border: none;
-//   border-radius: 5px;
-//   background-color: #36aff7;
-//   color: #fff;
-//   margin-bottom: 20px;
-
-//   :hover {
-//     opacity: 0.8;
-//   }
-
-//   @media screen and (max-width: 760px) {
-//     margin-bottom: 10px;
-//   }
-// `;

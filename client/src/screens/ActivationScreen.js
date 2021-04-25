@@ -1,10 +1,14 @@
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+//packages
 import axios from "axios";
 import { Form, Formik } from "formik";
-import activationImg from "../assets/img/activation.svg";
 import { Container, Grid, makeStyles } from "@material-ui/core";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import * as Yup from "yup";
+//assets
+import activationImg from "../assets/img/activation.svg";
+import AuthContext from "../context/AuthContext";
+//components
 import { ScreenContainer } from "../components/screen/Container";
 import { FormContainer } from "../components/form/Container";
 import { FormImg } from "../components/form/Image";
@@ -12,9 +16,15 @@ import { FormBtn } from "../components/form/Button";
 import { FormH1 } from "../components/form/Heading";
 import { FormP } from "../components/form/Paragraph";
 import { FormWrapper } from "../components/form/Wrapper";
-
+import Textfield from "../components/form/Textfield";
+import countryCode from "../assets/data/CountryCode.json";
+import Select from "../components/form/Select";
+//toast
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
+//UI styles
 const useStyles = makeStyles((theme) => ({
   formWrapper: {
     marginTop: theme.spacing(3),
@@ -25,12 +35,78 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+//inital values
+const INITIAL_FORM_STATE = {
+  countryCode1: "",
+  countryCode2: "",
+  countryCode3: "",
+  emergencyPhone1: "",
+  emergencyPhone2: "",
+  emergencyPhone3: "",
+};
+
+//validation schema
+const FORM_VALIDATION = Yup.object().shape({
+  countryCode1: Yup.string().required("Required."),
+  emergencyPhone1: Yup.string()
+    .matches(
+      /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+      "Phone Number Is Not Valid."
+    )
+    .typeError("Please enter a valid phone number.")
+    .required("Required."),
+  emergencyPhone2: Yup.string()
+    .matches(
+      /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+      "Phone Number Is Not Valid."
+    )
+    .typeError("Please enter a valid phone number."),
+  emergencyPhone3: Yup.string()
+    .matches(
+      /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
+      "Phone Number Is Not Valid."
+    )
+    .typeError("Please enter a valid phone number."),
+});
+
 const ActivationScreen = ({ match }) => {
   const history = useHistory();
   const classes = useStyles();
+  const { getUserDetails } = useContext(AuthContext);
 
-  const activationHandler = async (e) => {
-    e.preventDefault();
+  //getting width of the screen
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height,
+    };
+  }
+  useEffect(() => {
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions()
+  );
+
+  //function to handle activation
+  const activationHandler = async (values) => {
+    const emergencyContactNumbers = {
+      emrgencyContactOne: `+${values.countryCode1}${values.emergencyPhone1}`,
+      emrgencyContactTwo: !values.emergencyPhone2
+        ? null
+        : `+${values.countryCode2}${values.emergencyPhone2}`,
+      emrgencyContactThree: !values.emergencyPhone3
+        ? null
+        : `+${values.countryCode3}${values.emergencyPhone3}`,
+    };
+
+    console.log(emergencyContactNumbers);
 
     const config = {
       header: {
@@ -41,12 +117,15 @@ const ActivationScreen = ({ match }) => {
     try {
       const { data } = await axios.put(
         `http://localhost:5000/api/auth/activate/${match.params.activateToken}`,
+        emergencyContactNumbers,
         config
       );
 
       localStorage.setItem("authToken", data.token);
+
       // console.log(data);
       toast.success("Welcome to Releaf");
+      getUserDetails();
       history.push("/user/dashboard");
     } catch (error) {
       toast.error(error.response.data.error);
@@ -59,12 +138,8 @@ const ActivationScreen = ({ match }) => {
 
   return (
     <ScreenContainer>
-      <FormContainer>
-        <FormImg
-          src={activationImg}
-          alt="Activate Your Account!"
-          secondary={true}
-        />
+      <FormContainer reduceMargin={true} extraWidth={true}>
+        <FormImg src={activationImg} alt="Activate Your Account!" />
         <FormWrapper>
           <FormH1 extraPadding={true} smallFont={true}>
             Activate Your Account
@@ -77,11 +152,50 @@ const ActivationScreen = ({ match }) => {
             <Grid item xs={12}>
               <Container maxWidth="md">
                 <div className={classes.formWrapper}>
-                  <Formik onSubmit={activationHandler}>
+                  <Formik
+                    initialValues={{ ...INITIAL_FORM_STATE }}
+                    validationSchema={FORM_VALIDATION}
+                    onSubmit={activationHandler}
+                  >
                     <Form>
-                      <FormBtn type="submit" noTopPadding={true}>
-                        Activate
-                      </FormBtn>
+                      <Grid container spacing={2}>
+                        <Grid item xs={windowDimensions.width < 760 ? 12 : 5}>
+                          <Select
+                            name="countryCode1"
+                            label="Code"
+                            required={true}
+                            options={countryCode}
+                          />
+                        </Grid>
+                        <Grid item xs={windowDimensions.width < 760 ? 12 : 7}>
+                          <Textfield
+                            name="emergencyPhone1"
+                            label="Phone"
+                            required={true}
+                          />
+                        </Grid>
+                        <Grid item xs={windowDimensions.width < 760 ? 12 : 5}>
+                          <Select
+                            name="countryCode2"
+                            label="Code"
+                            options={countryCode}
+                          />
+                        </Grid>
+                        <Grid item xs={windowDimensions.width < 760 ? 12 : 7}>
+                          <Textfield name="emergencyPhone2" label="Phone" />
+                        </Grid>
+                        <Grid item xs={windowDimensions.width < 760 ? 12 : 5}>
+                          <Select
+                            name="countryCode3"
+                            label="Code"
+                            options={countryCode}
+                          />
+                        </Grid>
+                        <Grid item xs={windowDimensions.width < 760 ? 12 : 7}>
+                          <Textfield name="emergencyPhone3" label="Phone" />
+                        </Grid>
+                      </Grid>
+                      <FormBtn type="submit">Activate</FormBtn>
                     </Form>
                   </Formik>
                 </div>
@@ -95,99 +209,3 @@ const ActivationScreen = ({ match }) => {
 };
 
 export default ActivationScreen;
-
-// const ActivationScreenContainer = styled.div`
-//   width: 100%;
-//   margin: 100px auto;
-//   padding: 20px;
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-
-//   @media screen and (max-width: 780px) {
-//     margin-top: 40px;
-//   }
-
-//   @media screen and (max-width: 460px) {
-//     margin-top: 40px;
-//   }
-// `;
-
-// const ActivationScreenFormContainer = styled.div`
-//   width: 80%;
-//   /* height: 70%; */
-//   padding: 1.5rem;
-//   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
-//   background: #fff;
-//   display: flex;
-//   align-items: center;
-//   flex-direction: row;
-//   border-radius: 25px;
-
-//   @media screen and (max-width: 760px) {
-//     /* height: 85%; */
-//     flex-direction: column;
-//   }
-
-//   @media screen and (max-width: 460px) {
-//     width: 90%;
-//     background: #fff;
-//   }
-// `;
-
-// const ActivationScreenImg = styled.img`
-//   width: 55%;
-//   padding: 25px;
-
-//   @media screen and (max-width: 760px) {
-//     width: 100%;
-//     margin-bottom: 10px;
-//   }
-// `;
-
-// const ActivationScreenForm = styled.div`
-//   width: 100%;
-// `;
-
-// const ActivationScreenH1 = styled.h1`
-//   text-align: center;
-//   color: #01579b;
-//   margin-bottom: 20px;
-
-//   @media screen and (max-width: 760px) {
-//     font-size: 1.5rem;
-//   }
-// `;
-
-// const ActivationScreenP = styled.p`
-//   padding: 0 20px;
-//   font-size: 1rem;
-//   text-align: justify;
-//   color: #01579b;
-
-//   @media screen and (max-width: 760px) {
-//     font-size: 0.8rem;
-//   }
-// `;
-
-// const ActivationScreenBtn = styled.button`
-//   padding: 10px 20px;
-//   cursor: pointer;
-//   width: 100%;
-//   font-size: 1rem;
-//   border: none;
-//   border-radius: 5px;
-//   background-color: #36aff7;
-//   color: #fff;
-//   margin-top: 20px;
-//   margin-bottom: 20px;
-
-//   :hover {
-//     opacity: 0.8;
-//   }
-
-//   @media screen and (max-width: 760px) {
-//     margin-top: 0;
-//     margin-bottom: 10px;
-//   }
-// `;

@@ -6,17 +6,19 @@ const sendEmail = (options) => {
   const msg = {
     to: options.to,
     from: process.env.EMAIL_FROM,
-    templateId: process.env.TEMPLATE_ID,
-    dynamic_template_data: {
-      name: options.name,
-    },
+    subject: options.subject,
+    html: options.text,
+    // templateId: process.env.TEMPLATE_ID,
+    // dynamic_template_data: {
+    //   name: options.name,
+    // },
   };
 
   sgMail.send(msg, (error, result) => {
     if (error) {
       console.log(error);
     } else {
-      console.log("That's wassup!");
+      console.log("Email Sent");
     }
   });
 };

@@ -1,49 +1,38 @@
-// import { FaBars } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import styled from "styled-components";
 import releafLogo from "../../assets/img/releaf.jpg";
 import { Link } from "react-router-dom";
-// import { useContext } from "react";
-// import AuthContext from "../../context/AuthContext";
-// import LogoutBtn from ".././LogoutBtn";
+import { useContext } from "react";
+import AuthContext from "../../context/AuthContext";
+import LogoutBtn from ".././LogoutBtn";
 
 const Navbar = ({ toggle }) => {
-  // const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   return (
-    <>
-      <Nav>
-        <NavLink to="/">
-          <NavImg src={releafLogo} alt="Releaf" />
-        </NavLink>
-        {/* <MobileIcon onClick={toggle}>
-          <FaBars />
-        </MobileIcon> */}
-        <NavMenu>
-          <NavHeading>Your first step to a better You!</NavHeading>
-          {/*   <NavLink to = "/" >
-                        Home
-                </NavLink>
-                <NavLink to = "/contact" >
-                        Contact
-                </NavLink>
-                {
-                    user ? (
-                        <LogoutBtn/>
-                    ) : (
-                        <>
-                            <NavLink to = "/login" >
-                                Login
-                            </NavLink>
-                            <NavLink to = "/register" >
-                                Register
-                            </NavLink>
-                        </>
-                    ) 
-                }
-                */}
-        </NavMenu>
-      </Nav>
-    </>
+    <Nav>
+      <NavLink to="/">
+        <NavImg src={releafLogo} alt="Releaf" />
+      </NavLink>
+      <MobileIcon onClick={toggle}>
+        <FaBars />
+      </MobileIcon>
+      <NavMenu>
+        <NavLink to="/">Home</NavLink>
+        <NavLink to="/contact">Contact</NavLink>
+        {!user ? (
+          <>
+            {console.log(user)}
+            <NavLink to="/login">Login</NavLink>
+            <NavLink to="/register">Register</NavLink>
+          </>
+        ) : (
+          <>
+            <LogoutBtn />
+          </>
+        )}
+      </NavMenu>
+    </Nav>
   );
 };
 
@@ -65,17 +54,6 @@ const Nav = styled.nav`
   }
 `;
 
-const NavHeading = styled.h1`
-  color: #fff;
-  /* font-weight: 600; */
-  font-size: 2rem;
-  font-family: "Josefin Sans", sans-serif;
-
-  @media screen and (max-width: 768px) {
-    font-size: 1.1rem;
-  }
-`;
-
 const NavImg = styled.img`
   width: 70px;
   display: block;
@@ -89,9 +67,9 @@ const NavMenu = styled.div`
   margin-right: -24px;
   margin-left: -120px;
   margin-right: 24px;
-  /* @media screen and (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: none;
-  } */
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -116,18 +94,18 @@ const NavLink = styled(Link)`
   }
 `;
 
-// const MobileIcon = styled.div`
-//   display: none;
+const MobileIcon = styled.div`
+  display: none;
 
-//   @media screen and (max-width: 768px) {
-//     display: block;
-//     color: #14a7f3;
-//     color: white;
-//     position: absolute;
-//     top: 0;
-//     right: 0;
-//     transform: translate(-100%, 60%);
-//     font-size: 1.8rem;
-//     cursor: pointer;
-//   }
-// `;
+  @media screen and (max-width: 768px) {
+    display: block;
+    color: #14a7f3;
+    color: white;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(-100%, 60%);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+`;

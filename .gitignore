@@ -7,7 +7,7 @@ node_modules/
 .pnp.js
 firebase.js
 
-# testing
+# testing`
 /coverage
 
 # production

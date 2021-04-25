@@ -51,9 +51,9 @@ const FORM_VALIDATION = Yup.object().shape({
   phone: Yup.string()
     .matches(
       /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/,
-      "Phone Number Is Not Valid"
+      "Phone Number Is Not Valid."
     )
-    .typeError("Please enter a valid phone number")
+    .typeError("Please enter a valid phone number.")
     .required("Required."),
   occupation: Yup.string().required("Required."),
   company: Yup.string(),

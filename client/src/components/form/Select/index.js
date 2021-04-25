@@ -1,5 +1,6 @@
 import { MenuItem, TextField } from "@material-ui/core";
 import { useField, useFormikContext } from "formik";
+import React from "react";
 
 const SelectWrapper = ({ name, options, ...otherProps }) => {
   const { setFieldValue } = useFormikContext();
@@ -15,8 +16,8 @@ const SelectWrapper = ({ name, options, ...otherProps }) => {
     ...otherProps,
     select: true,
     fullWidth: true,
-    onChange: handleChange,
     variant: "outlined",
+    onChange: handleChange,
   };
 
   if (meta && meta.touched && meta.error) {

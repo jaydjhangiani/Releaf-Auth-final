@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const FormContainer = styled.div`
-  width: 70%;
+  width: ${({ extraWidth }) => (extraWidth ? "90%" : "70%")};
   /* height: 70%; */
   margin: ${({ reduceMargin }) => (reduceMargin ? "10px auto" : "80px auto")};
   padding: 1.5rem;

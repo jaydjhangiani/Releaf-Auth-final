@@ -5,7 +5,14 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 exports.register = async function (req, res, next) {
-  const { firstName, lastName, username, email, password } = req.body;
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    phoneNumber,
+    password,
+  } = req.body;
   try {
     const user = await User.findOne({
       $or: [
@@ -25,6 +32,7 @@ exports.register = async function (req, res, next) {
           lastName,
           username,
           email,
+          phoneNumber,
           password,
         },
         process.env.JWT_SECRET,
@@ -65,10 +73,18 @@ exports.register = async function (req, res, next) {
 
 exports.activation = async (req, res, next) => {
   const token = req.params.activateToken;
+  const emergencyContactNumber = req.body;
 
   decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const { firstName, lastName, username, email, password } = decoded;
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    phoneNumber,
+    password,
+  } = decoded;
 
   try {
     const user = await User.create({
@@ -76,25 +92,19 @@ exports.activation = async (req, res, next) => {
       lastName,
       username,
       email,
+      phoneNumber,
       password,
+      emergencyContactNumbers: {
+        emergencyContactOne: Object.values(emergencyContactNumber)[0],
+        emergencyContactTwo: Object.values(emergencyContactNumber)[1],
+        emergencyContactThree: Object.values(emergencyContactNumber)[2],
+      },
     });
     sendToken(user, 201, res);
   } catch (error) {
     next(error);
   }
 };
-
-// exports.register = async (req,res,next) => {
-//     const {firstName, lastName, username, email, password} = req.body;
-//     try {
-//         const user = await User.create({
-//             firstName,lastName,username,email,password
-//         });
-//         sendToken(user, 201, res)
-//     } catch (error) {
-//         next(error);
-//     }
-// }
 
 exports.login = async (req, res, next) => {
   const { email, password } = req.body;

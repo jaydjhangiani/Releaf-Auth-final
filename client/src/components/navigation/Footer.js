@@ -11,23 +11,23 @@ const Footer = () => {
           Releaf © {new Date().getFullYear()} All rights reserved.{" "}
         </WebsiteRights>
         <SocialIcons>
-          {/* <SocialIconLink
+          <SocialIconLink
             href="https://github.com/jaydjhangiani"
             target="_blank"
             aria-label="Github"
           >
             <FaGithub />
-          </SocialIconLink> */}
+          </SocialIconLink>
           <SocialIconLink aria-label="MADE WITH REACT">
             <FaReact />
           </SocialIconLink>
-          {/* <SocialIconLink
+          <SocialIconLink
             href="https://linkedin.com/in/jayjhangiani"
             target="_blank"
             aria-label="Linkedin"
           >
             <FaLinkedin />
-          </SocialIconLink> */}
+          </SocialIconLink>
         </SocialIcons>
       </FooterWrap>
     </FooterContainer>
@@ -120,8 +120,8 @@ const WebsiteRights = styled.small`
 
 const SocialIcons = styled.div`
   display: flex;
-  /* justify-content: space-between; */
-  justify-content: center;
+  justify-content: space-between;
+  /* justify-content: center; */
   align-items: center;
   width: 240px;
 `;
