@@ -1,17 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 //assets
-import AuthContext from "../context/AuthContext";
-//components
-import Sidebar from "../components/sidebar/Sidebar";
-import PrivateScreen from "../screens/PrivateScreen";
+import UpdateSection from "../components/home/UpdateSection";
 
 const DashboardScreen = () => {
-  const { user } = useContext(AuthContext);
-
   return (
     <div>
-      <Sidebar user={user} />
-      <PrivateScreen />
+      <UpdateSection />
     </div>
   );
 };

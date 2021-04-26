@@ -9,7 +9,7 @@ const HeroSection = () => {
       </HeroBg>
       <HeroContent>
         <HeroH1>Welcome to Releaf</HeroH1>
-        {/* <HeroP>Random Text</HeroP> */}
+        <HeroP>Take your first steps towards mental gratification</HeroP>
       </HeroContent>
     </HeroContainer>
   );
@@ -91,16 +91,17 @@ const HeroH1 = styled.h1`
   }
 `;
 
-// const HeroP = styled.p`
-//   margin-top: 24px;
-//   color: #fff;
-//   font-size: 24px;
-//   text-align: center;
-//   max-width: 600px;
-//   @media screen and (max-width: 760px) {
-//     font-size: 24px;
-//   }
-//   @media screen and (max-width: 480px) {
-//     font-size: 18px;
-//   }
-// `;
+const HeroP = styled.p`
+  margin-top: 24px;
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  max-width: 600px;
+  padding-left: 20px;
+  @media screen and (max-width: 760px) {
+    font-size: 24px;
+  }
+  @media screen and (max-width: 480px) {
+    font-size: 18px;
+  }
+`;

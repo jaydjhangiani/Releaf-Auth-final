@@ -9,7 +9,7 @@ import * as Yup from "yup";
 import activationImg from "../assets/img/activation.svg";
 import AuthContext from "../context/AuthContext";
 //components
-import { ScreenContainer } from "../components/screen/Container";
+import { ScreenContainer } from "../components/screen";
 import { FormContainer } from "../components/form/Container";
 import { FormImg } from "../components/form/Image";
 import { FormBtn } from "../components/form/Button";
@@ -137,16 +137,16 @@ const ActivationScreen = ({ match }) => {
   };
 
   return (
-    <ScreenContainer>
-      <FormContainer reduceMargin={true} extraWidth={true}>
+    <ScreenContainer reducePadding={true} lightBg={true}>
+      <FormContainer extraWidth={true}>
         <FormImg src={activationImg} alt="Activate Your Account!" />
         <FormWrapper>
           <FormH1 extraPadding={true} smallFont={true}>
             Activate Your Account
           </FormH1>
           <FormP center={true}>
-            Take your first steps towards mental gratification by clicking the
-            button below.
+            Before you activate your account, please enter upto three contact
+            numbers that could be used in the case of an emergency.
           </FormP>
           <Grid container>
             <Grid item xs={12}>

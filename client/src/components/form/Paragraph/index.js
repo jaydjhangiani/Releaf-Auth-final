@@ -5,6 +5,7 @@ export const FormP = styled.p`
   padding: 0 20px;
   font-size: 1rem;
   text-align: justify;
+  font-family: "Montserrat", sans-serif;
 
   color: #01579b;
 

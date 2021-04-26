@@ -11,7 +11,7 @@ import loginImg from "../assets/img/login.png";
 //components
 import Textfield from "../components/form/Textfield";
 import Password from "../components/form/Password";
-import { ScreenContainer } from "../components/screen/Container";
+import { ScreenContainer } from "../components/screen";
 import { FormContainer } from "../components/form/Container";
 import { FormImg } from "../components/form/Image";
 import { FormBtn } from "../components/form/Button";
@@ -47,12 +47,13 @@ const FORM_VALIDATION = Yup.object().shape({
 
 const LoginScreen = ({ history }) => {
   const classes = useStyles();
-  const { getUserDetails } = useContext(AuthContext);
+  const { user, getUserDetails } = useContext(AuthContext);
 
   //redirect if already logged in
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
-      history.push("/");
+      getUserDetails();
+      history.push(`/${user?.type}/dashboard`);
     }
   }, [history]);
 
@@ -80,8 +81,8 @@ const LoginScreen = ({ history }) => {
   };
 
   return (
-    <ScreenContainer>
-      <FormContainer reduceMargin={true}>
+    <ScreenContainer reducePadding={true} lightBg={true}>
+      <FormContainer>
         <FormImg src={loginImg} alt="Login to Releaf" />
         <Grid container>
           <Grid item xs={12}>

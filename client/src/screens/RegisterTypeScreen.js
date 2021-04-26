@@ -1,7 +1,7 @@
 //packages
 import { Container, Grid } from "@material-ui/core";
 //components
-import { ScreenContainer } from "../components/screen/Container";
+import { ScreenContainer } from "../components/screen/";
 import { FormContainer } from "../components/form/Container";
 import { FormImg } from "../components/form/Image";
 import { FormWrapper } from "../components/form/Wrapper";
@@ -24,7 +24,7 @@ const RegisterTypeScreen = ({ history }) => {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer reducePadding={true} lightBg={true}>
       <FormContainer>
         <FormImg src={registerImg} alt="Register" secondary={true} />
         <FormWrapper>

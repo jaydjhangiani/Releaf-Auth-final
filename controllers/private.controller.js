@@ -1,44 +1,87 @@
 const jwt = require("jsonwebtoken");
-const User = require('../models/User');
-const ErrorResponse = require('../utils/ErrorResponse');
+const User = require("../models/User");
+const ErrorResponse = require("../utils/ErrorResponse");
+const Parser = require("rss-parser");
+const parser = new Parser();
 
-exports.getPrivateData = (req,res,next) => {
-    res.status(200).json({
+exports.getPrivateData = (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    data: "you've got access",
+  });
+};
+
+exports.getUser = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  let decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  let _id = decoded.id;
+
+  try {
+    const user = await User.findOne({ _id });
+
+    const userDetails = {
+      username: user.username,
+      typeOfUser: user.typeOfUser ? typeOfUser : "user",
+    };
+
+    if (user) {
+      res.status(200).json({
         success: true,
-        data: "you've got access"
+        data: userDetails,
+      });
+    } else {
+      return next(new ErrorResponse("Something went wrong!", 500));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getRss = async (req, res, next) => {
+  console.log(req.body);
+  const feed = await parser
+    .parseURL(req.body.rss)
+    .catch((err) => res.status(400).json("Error" + err));
+
+  // console.log(feed)
+
+  let items = [];
+
+  await Promise.all(
+    feed.items.map(async (currentItem) => {
+      if (items.filter((item) => isEquivalent(item, currentItem)).length <= 0) {
+        items.push(currentItem);
+      }
     })
-}
+  );
 
-exports.getUser = async (req, res,next) => {
-    let token ;
+  function isEquivalent(a, b) {
+    // Create arrays of property names
+    let aProps = Object.getOwnPropertyNames(a);
+    let bProps = Object.getOwnPropertyNames(b);
 
-    if(req.headers.authorization && req.headers.authorization.startsWith("Bearer")){
-        token = req.headers.authorization.split(" ")[1]
+    // if number of properties is different, objects are not equivalent
+    if (aProps.length != bProps.length) {
+      return false;
     }
 
-    let decoded = jwt.verify(token, process.env.JWT_SECRET)
+    for (let i = 0; i < aProps.length; i++) {
+      let propName = aProps[i];
 
-    let _id = decoded.id
-
-    try {
-        const user = await User.findOne({_id});
-
-        const userDetails = {
-            username: user.username,
-            typeOfUser: user.typeOfUser ? (typeOfUser) : ('user')
-        }
-
-        if(user){
-            res.status(200).json({
-                success: true,
-                data: userDetails
-            })
-        }else{
-            return next(new ErrorResponse("Something went wrong!",500))
-        }
-
-    } catch (error) {
-        next(error);
+      // if values of same property are not equal, objects are not equivalent
+      if (a[propName] !== b[propName]) {
+        return false;
+      }
     }
-
-}
+  }
+  res.send(items);
+};

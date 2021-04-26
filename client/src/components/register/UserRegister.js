@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 //assets
 import userRegisterImg from "../../assets/img/userRegister.svg";
+import AuthContext from "../../context/AuthContext";
 //packages
 import axios from "axios";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 //components
-import { ScreenContainer } from "../screen/Container";
+import { ScreenContainer } from "../screen/";
 import { FormContainer } from "../form/Container";
 import { FormImg } from "../form/Image";
 import { FormH1 } from "../form/Heading";
@@ -72,8 +73,10 @@ const FORM_VALIDATION = Yup.object().shape({
     .required("The terms and conditions must be accepted."),
 });
 
-const UserRegister = ({ history }) => {
+const UserRegister = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const { user } = useContext(AuthContext);
 
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
@@ -98,7 +101,7 @@ const UserRegister = ({ history }) => {
 
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
-      history.push("/");
+      history.push(`/${user?.type}/dashboard`);
     }
   }, [history]);
 
@@ -138,7 +141,7 @@ const UserRegister = ({ history }) => {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer lightBg={true}>
       <FormContainer
         onSubmit={registerHandler}
         extraWidth={true}

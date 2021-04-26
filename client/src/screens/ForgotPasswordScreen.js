@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 //components
 import Textfield from "../components/form/Textfield";
-import { ScreenContainer } from "../components/screen/Container";
+import { ScreenContainer } from "../components/screen";
 import { FormContainer } from "../components/form/Container";
 import { FormImg } from "../components/form/Image";
 import { FormBtn } from "../components/form/Button";
@@ -64,7 +64,7 @@ const ForgotPasswordScreen = () => {
   };
 
   return (
-    <ScreenContainer>
+    <ScreenContainer reducePadding={true} lightBg={true}>
       <FormContainer>
         <FormImg src={forgotPasswordImg} secondary={true} />
         <FormWrapper>
