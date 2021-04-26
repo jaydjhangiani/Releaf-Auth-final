@@ -116,7 +116,7 @@ const ActivationScreen = ({ match }) => {
 
     try {
       const { data } = await axios.put(
-        `http://localhost:5000/api/auth/activate/${match.params.activateToken}`,
+        `${process.env.REACT_APP_URI}/api/auth/activate/${match.params.activateToken}`,
         emergencyContactNumbers,
         config
       );

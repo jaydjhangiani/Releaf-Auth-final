@@ -17,7 +17,7 @@ const AuthContextProvider = (props) => {
       try {
         console.log("hi");
         const { data } = await axios.get(
-          "http://localhost:5000/api/private/user",
+          `${process.env.REACT_APP_URI}/api/private/user`,
           config
         );
         setUser(data.data);

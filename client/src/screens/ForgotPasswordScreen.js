@@ -53,7 +53,7 @@ const ForgotPasswordScreen = () => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
+        `${process.env.REACT_APP_URI}/api/auth/forgot-password`,
         values,
         config
       );

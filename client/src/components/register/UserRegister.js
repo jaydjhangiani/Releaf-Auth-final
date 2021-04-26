@@ -128,7 +128,7 @@ const UserRegister = () => {
     } else {
       try {
         const { data } = await axios.post(
-          "http://localhost:5000/api/auth/register",
+          `${process.env.REACT_APP_URI}/api/auth/register`,
           formData,
           config
         );

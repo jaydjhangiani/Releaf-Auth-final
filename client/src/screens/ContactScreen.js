@@ -121,7 +121,7 @@ const ContactScreen = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/contact",
+        `${process.env.REACT_APP_URI}/api/contact`,
         contactData,
         config
       );

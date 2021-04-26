@@ -61,7 +61,7 @@ const ResetPasswordScreen = ({ match }) => {
     } else {
       try {
         const { data } = await axios.put(
-          `http://localhost:5000/api/auth/reset-password/${match.params.resetToken}`,
+          `${process.env.REACT_APP_URI}/api/auth/reset-password/${match.params.resetToken}`,
           values.password,
           config
         );
@@ -74,7 +74,7 @@ const ResetPasswordScreen = ({ match }) => {
   };
 
   return (
-    <ScreenContainer lightBg={true}>
+    <ScreenContainer lightBg={true} reducePadding={true}>
       <FormContainer>
         <FormImg src={resetPasswordImg} secondary={true} />
         <FormWrapper onSubmit={resetPasswordHandler}>

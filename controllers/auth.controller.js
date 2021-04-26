@@ -41,7 +41,7 @@ exports.register = async function (req, res, next) {
         }
       );
 
-      const activateUrl = `http://localhost:3000/activate-account/${activateToken}`;
+      const activateUrl = `${process.env.FRONT_END_URI}/activate-account/${activateToken}`;
 
       const message = `
             <h1>Activate Your Account</h1>
@@ -51,9 +51,8 @@ exports.register = async function (req, res, next) {
       try {
         await sendEmail({
           to: email,
-          name: firstName,
-          subject: "Activate Your Account",
-          text: message,
+          activationToken: activateUrl,
+          templateName: "activationEmail",
         });
 
         res.status(200).json({
@@ -155,11 +154,11 @@ exports.forgotPassword = async (req, res, next) => {
             <a href=${resetUrl} clicktracking=off >${resetUrl}</a>
         `;
     try {
+      console.log(email);
       await sendEmail({
-        to: user.email,
-        name: user.username,
-        subject: "Password Reset Request",
-        text: message,
+        to: email,
+        resetToken: resetUrl,
+        templateName: "passwordResetEmail",
       });
 
       res.status(200).json({
@@ -169,7 +168,6 @@ exports.forgotPassword = async (req, res, next) => {
     } catch (error) {
       user.resetPasswordToken = undefined;
       user.resetPasswordExpire = undefined;
-
       await user.save();
       return next(new ErrorResponse("Email Could not be sent!", 500));
     }

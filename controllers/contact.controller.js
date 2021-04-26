@@ -9,7 +9,8 @@ exports.sendContactMail = async (req, res, next) => {
   try {
     await sendEmail({
       to: email,
-      mame: firstName,
+      firstName: firstName,
+      templateName: "contactEmail",
     });
 
     res.status(200).json({

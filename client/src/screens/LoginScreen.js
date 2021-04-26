@@ -67,7 +67,7 @@ const LoginScreen = ({ history }) => {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${process.env.REACT_APP_URI}/api/auth/login`,
         values,
         config
       );
