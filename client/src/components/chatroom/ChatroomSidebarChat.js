@@ -1,15 +1,12 @@
-import { Avatar } from "@material-ui/core";
-import { useContext, useEffect, useState } from "react";
-import db, { auth } from "../../assets/firebase";
+import { useEffect, useState } from "react";
+import db from "../../assets/firebase";
 import * as timeago from "timeago.js";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import AuthContext from "../../context/AuthContext";
 
 const ChatroomSidebarChat = ({ id, chatName, description }) => {
   const [chatInfo, setChatInfo] = useState([]);
   const history = useHistory();
-  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     db.collection("chats")

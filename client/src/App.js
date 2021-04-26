@@ -12,7 +12,6 @@ import Navbar from "./components/navigation/Navbar";
 import MobileMenu from "./components/navigation/MobileMenu";
 import Footer from "./components/navigation/Footer";
 import PodcastRoute from "./utils/PodcastRoute";
-import Loading from "./components/Loading";
 
 const App = () => {
   const { user } = useContext(AuthContext);

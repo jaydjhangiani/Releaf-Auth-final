@@ -1,11 +1,9 @@
 import styled from "styled-components";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Avatar, IconButton } from "@material-ui/core";
-// import  RateReviewOutlinedIcon  from '@material-ui/icons/RateReviewOutlined'
-// import SearchIcon  from '@material-ui/icons/Search'
-import { auth } from "../../assets/firebase";
+
 import db from "../../assets/firebase";
-// import { useEffect, useState } from 'react';
+
 import ChatroomSidebarChat from "./ChatroomSidebarChat";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useContext } from "react";
