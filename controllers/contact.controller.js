@@ -1,5 +1,5 @@
 const sgMail = require("@sendgrid/mail");
-const ErrorResponse = require("../utils/ErrorResponse");
+const ErrorResponse = require("../utils/errorResponse");
 const sendEmail = require("../utils/sendEmail");
 
 exports.sendContactMail = async (req, res, next) => {
