@@ -16,7 +16,7 @@ app.use(
   })
 );
 
-app.use("/api/auth/", require("./routes/auth.route"));
+app.use("/api/auth/user", require("./routes/auth.user.routeroute"));
 app.use("/api/private/", require("./routes/private.route"));
 app.use("/api/contact/", require("./routes/contact.route"));
 
