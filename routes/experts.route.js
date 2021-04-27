@@ -1,7 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const { createExpert } = require('../controllers/experts.controller')
+const express = require("express");
+const router = express.Router();
+const { createExpert } = require("../controllers/experts.controller");
 
-router.route('/').post(createExpert)
+router.route("/register").post(createExpert);
 
-module.exports = router
+module.exports = router;
