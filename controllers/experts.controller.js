@@ -44,6 +44,22 @@ exports.createExpert = async (req, res, next) => {
 
     if (!expert) {
       try {
+        console.log({
+          firstName,
+          lastName,
+          specialization,
+          email,
+          phoneNumber,
+          address,
+          city,
+          pinCode,
+          displayName,
+          password,
+          calendlyUsername,
+          podcastRss,
+          profilePicture: profilePictureUrl,
+          resume: resumeUrl,
+        });
         const expert = await Expert.create({
           firstName,
           lastName,
