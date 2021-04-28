@@ -109,3 +109,22 @@ exports.fetchAllExperts = async (req, res, next) => {
     next(err)
   }
 }
+
+/*Three status  */
+exports.changeStatusOfExpert = async (req, res, next) => {
+  try {
+    const { expertId } = req.body
+    const expert = await Expert.findById(expertId)
+    expert.verified = !expert.verified
+
+    await expert.save()
+
+    return res.status(200).json({
+      success: true,
+      data: expert,
+    })
+  } catch (err) {
+    console.log(err)
+    next(err)
+  }
+}
