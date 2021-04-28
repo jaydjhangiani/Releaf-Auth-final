@@ -115,7 +115,14 @@ exports.changeStatusOfExpert = async (req, res, next) => {
   try {
     const { expertId } = req.body
     const expert = await Expert.findById(expertId)
+
     expert.verified = !expert.verified
+
+    if (expert.verified) {
+      // send Mail that you have been verfied and can use our services
+    } else {
+      // send Mail that we have rejected your application
+    }
 
     await expert.save()
 
