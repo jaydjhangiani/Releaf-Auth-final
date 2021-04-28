@@ -7,7 +7,9 @@ const sendEmail = (options) => {
     contactEmail: process.env.CONTACT_TEMPLATE_ID,
     activationEmail: process.env.ACTIVATE_TEMPLATE_ID,
     passwordResetEmail: process.env.RESET_TEMPLATE_ID,
-    expertRegistration: process.env.EXPERT_REGISTRATION__TEMPLATE_ID,
+    expertRegistration: process.env.EXPERT_REGISTRATION_TEMPLATE_ID,
+    expertApproval: process.env.EXPERT_APPROVAL_TEMPLATE_ID,
+    expertRejection: process.env.EXPERT_REJECTION_TEMPLATE_ID,
   };
 
   const msg = {
