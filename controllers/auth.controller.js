@@ -146,7 +146,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     await user.save();
 
-    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetUrl = `${rocess.env.FRONT_END_URI}/reset-password/${resetToken}`;
 
     const message = `
             <h1>You have requested a password reset</h1>

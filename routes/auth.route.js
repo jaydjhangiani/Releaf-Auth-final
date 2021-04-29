@@ -11,7 +11,7 @@ const {
 
 router.route("/register").post(register);
 
-router.route("/activate/:activateToken").put(activation);
+router.route("/user/activate/:activateToken").put(activation);
 
 router.route("/user/login").post(login);
 

@@ -1,12 +1,12 @@
-const Expert = require('../models/Expert')
-const ErrorResponse = require('../utils/errorResponse')
-const sendEmail = require('../utils/sendEmail')
+const Expert = require("../models/Expert");
+const ErrorResponse = require("../utils/errorResponse");
+const sendEmail = require("../utils/sendEmail");
 
 exports.createExpert = async (req, res, next) => {
-  const { profilePicture, resume } = req.files
+  const { profilePicture, resume } = req.files;
 
-  const profilePictureUrl = profilePicture[0].path
-  const resumeUrl = resume[0].path
+  const profilePictureUrl = profilePicture[0].path;
+  const resumeUrl = resume[0].path;
 
   const {
     firstName,
@@ -21,7 +21,7 @@ exports.createExpert = async (req, res, next) => {
     password,
     calendlyUsername,
     podcastRss,
-  } = req.body
+  } = req.body;
 
   // console.log(firstName, lastName, specialization, email)
 
@@ -40,7 +40,7 @@ exports.createExpert = async (req, res, next) => {
           displayName: displayName,
         },
       ],
-    })
+    });
 
     if (!expert) {
       try {
@@ -59,7 +59,7 @@ exports.createExpert = async (req, res, next) => {
           podcastRss,
           profilePicture: profilePictureUrl,
           resume: resumeUrl,
-        })
+        });
         const expert = await Expert.create({
           firstName,
           lastName,
@@ -75,68 +75,68 @@ exports.createExpert = async (req, res, next) => {
           podcastRss,
           profilePicture: profilePictureUrl,
           resume: resumeUrl,
-        })
+        });
 
         if (expert) {
           try {
             await sendEmail({
               to: email,
-              templateName: 'expertRegistration',
-            })
+              templateName: "expertRegistration",
+            });
 
             res.status(200).json({
               success: true,
-              data: 'email sent!',
-            })
+              data: "email sent!",
+            });
           } catch (error) {
-            return next(new ErrorResponse('Email Could not be sent!', 500))
+            return next(new ErrorResponse("Email Could not be sent!", 500));
           }
         } else {
-          return next(new ErrorResponse('User Could Not Be Registered', 500))
+          return next(new ErrorResponse("User Could Not Be Registered", 500));
         }
       } catch (err) {
-        return next(new ErrorResponse(err, 500))
+        return next(new ErrorResponse(err, 500));
       }
     } else {
-      return next(new ErrorResponse('User Already Exists', 409))
+      return next(new ErrorResponse("User Already Exists", 409));
     }
 
-    console.log(req.body)
+    console.log(req.body);
   } catch (error) {
-    console.log(error)
-    next(error)
+    console.log(error);
+    next(error);
   }
-}
+};
 
 exports.fetchAllExperts = async (req, res, next) => {
   try {
-    const experts = await Expert.find()
+    const experts = await Expert.find();
 
     return res.status(200).json({
       success: true,
       data: experts,
-    })
+    });
   } catch (err) {
     // console.log(err)
-    next(err)
+    next(err);
   }
-}
+};
 
 /*Three status  */
 exports.changeStatusOfExpert = async (req, res, next) => {
   try {
-    const { expertId } = req.body
-    const expert = await Expert.findById(expertId)
+    const { expertId } = req.body;
+    const expert = await Expert.findById(expertId);
 
-    expert.verified = !expert.verified
+    expert.verified = !expert.verified;
 
     // There was some error in sending mail do check
-    /*
+
     if (expert.verified) {
       // send Mail that you have been verfied and can use our services
       try {
         await sendEmail({
-          to: email,
+          to: expert.email,
           templateName: "expertApproval",
           expertDisplayName: expert.displayName,
         });
@@ -146,12 +146,14 @@ exports.changeStatusOfExpert = async (req, res, next) => {
           data: "email sent!",
         });
       } catch (error) {
-        return next(new ErrorResponse("Email Could not be sent!", 500));
+        return next(
+          new ErrorResponse("Approval Email Could not be sent!", 500)
+        );
       }
     } else {
       try {
         await sendEmail({
-          to: email,
+          to: expert.email,
           templateName: "expertRejection",
         });
 
@@ -160,18 +162,20 @@ exports.changeStatusOfExpert = async (req, res, next) => {
           data: "email sent!",
         });
       } catch (error) {
-        return next(new ErrorResponse("Email Could not be sent!", 500));
+        return next(
+          new ErrorResponse("Rekection Email Could not be sent!", 500)
+        );
       }
     }
-*/
-    await expert.save()
+
+    await expert.save();
 
     return res.status(200).json({
       success: true,
       data: expert,
-    })
+    });
   } catch (err) {
-    console.log(err)
-    next(err)
+    console.log(err);
+    next(err);
   }
-}
+};
