@@ -103,15 +103,12 @@ ExpertSchema.methods.matchPasswords = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-ExpertSchema.methods.getSignedToken = function () {
+ExpertSchema.methods.getSignedJwtToken = function () {
   return jwt.sign(
     {
       id: this._id,
     },
-    process.env.JWT_SECRET_AUTH,
-    {
-      expiresIn: process.env.JWT_TOKEN_EXPIRE,
-    }
+    process.env.JWT_SECRET_AUTH
   );
 };
 

@@ -1,6 +1,8 @@
 const Expert = require("../models/Expert");
 const ErrorResponse = require("../utils/errorResponse");
 const sendEmail = require("../utils/sendEmail");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 exports.createExpert = async (req, res, next) => {
   const { profilePicture, resume } = req.files;
@@ -100,10 +102,7 @@ exports.createExpert = async (req, res, next) => {
     } else {
       return next(new ErrorResponse("User Already Exists", 409));
     }
-
-    console.log(req.body);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -210,8 +209,10 @@ exports.expertLogin = async (req, res, next) => {
 
 exports.expertsForgotPassword = async (req, res, next) => {
   const { email } = req.body;
+
   try {
     const expert = await Expert.findOne({ email });
+    console.log(expert);
 
     if (!expert) {
       return next(new ErrorResponse("Email could not be sent", 404));
@@ -222,7 +223,7 @@ exports.expertsForgotPassword = async (req, res, next) => {
 
       await expert.save();
 
-      const resetUrl = `${rocess.env.FRONT_END_URI}/expert/reset-password/${resetToken}`;
+      const resetUrl = `${process.env.FRONT_END_URI}/expert/reset-password/${resetToken}`;
 
       try {
         console.log(email);
@@ -255,14 +256,12 @@ exports.expertsResetPassword = async (req, res, next) => {
     .createHash("sha256")
     .update(req.params.resetToken)
     .digest("hex");
-  console.log(resetPasswordToken);
+
   try {
     const expert = await Expert.findOne({
       resetPasswordToken,
       resetPasswordExpire: { $gt: Date.now() },
     });
-
-    console.log(expert);
 
     if (!expert) {
       return next(new ErrorResponse("Invalid Reset Token", 400));
@@ -284,7 +283,7 @@ exports.expertsResetPassword = async (req, res, next) => {
 };
 
 const sendToken = (expert, statusCode, res) => {
-  const token = expert.getSignedToken();
+  const token = expert.getSignedJwtToken();
   res.status(statusCode).json({
     success: true,
     token,
