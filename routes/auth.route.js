@@ -11,12 +11,12 @@ const {
 
 router.route("/register").post(register);
 
-router.route("/user/activate/:activateToken").put(activation);
+router.route("/activate/:activateToken").put(activation);
 
-router.route("/user/login").post(login);
+router.route("/login").post(login);
 
-router.route("/user/forgot-password").post(forgotPassword);
+router.route("/forgot-password").post(forgotPassword);
 
-router.route("/user/reset-password/:resetToken").put(resetPassword);
+router.route("/reset-password/:resetToken").put(resetPassword);
 
 module.exports = router;

@@ -179,3 +179,114 @@ exports.changeStatusOfExpert = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.expertLogin = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return next(
+      new ErrorResponse("Please provide an email and password.", 400)
+    );
+  }
+  try {
+    const expert = await Expert.findOne({ email }).select("+password");
+    if (!expert) {
+      return next(new ErrorResponse("Invlaid Credentials.", 401));
+    }
+    if (expert.verified === true) {
+      const isMatch = await expert.matchPasswords(password);
+      if (!isMatch) {
+        return next(new ErrorResponse("Invlaid Credentials.", 401));
+      }
+
+      sendToken(expert, 200, res);
+    } else {
+      return next(new ErrorResponse("Wait for approval!.", 401));
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.expertsForgotPassword = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const expert = await Expert.findOne({ email });
+
+    if (!expert) {
+      return next(new ErrorResponse("Email could not be sent", 404));
+    }
+
+    if (expert.verified === true) {
+      const resetToken = expert.getResetPasswordToken();
+
+      await expert.save();
+
+      const resetUrl = `${rocess.env.FRONT_END_URI}/expert/reset-password/${resetToken}`;
+
+      try {
+        console.log(email);
+        await sendEmail({
+          to: email,
+          resetToken: resetUrl,
+          templateName: "passwordResetEmail",
+        });
+
+        res.status(200).json({
+          success: true,
+          data: "email sent!",
+        });
+      } catch (error) {
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+        await user.save();
+        return next(new ErrorResponse("Email Could not be sent!", 500));
+      }
+    } else {
+      return next(new ErrorResponse("Wait for approval!.", 401));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.expertsResetPassword = async (req, res, next) => {
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.resetToken)
+    .digest("hex");
+  console.log(resetPasswordToken);
+  try {
+    const expert = await Expert.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    console.log(expert);
+
+    if (!expert) {
+      return next(new ErrorResponse("Invalid Reset Token", 400));
+    }
+
+    expert.password = req.body.password;
+    expert.resetPasswordToken = undefined;
+    expert.resetPasswordExpire = undefined;
+
+    await expert.save();
+
+    res.status(201).json({
+      success: true,
+      data: "Password reset successfully!",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const sendToken = (expert, statusCode, res) => {
+  const token = expert.getSignedToken();
+  res.status(statusCode).json({
+    success: true,
+    token,
+  });
+};

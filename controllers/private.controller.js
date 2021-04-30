@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse");
 const Parser = require("rss-parser");
+const Expert = require("../models/Expert");
 const parser = new Parser();
 
 exports.getPrivateData = (req, res, next) => {
@@ -39,6 +40,41 @@ exports.getUser = async (req, res, next) => {
       res.status(200).json({
         success: true,
         data: userDetails,
+      });
+    } else {
+      return next(new ErrorResponse("Something went wrong!", 500));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getExpert = async (req, res, next) => {
+  let token;
+
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  }
+
+  let decoded = jwt.verify(token, process.env.JWT_SECRET_AUTH);
+
+  let _id = decoded.id;
+
+  try {
+    const expert = await Expert.findOne({ _id });
+
+    const expertDetails = {
+      displayName: expert.displayName,
+      photo: expert.profilePicture,
+    };
+
+    if (expert) {
+      res.status(200).json({
+        success: true,
+        data: expertDetails,
       });
     } else {
       return next(new ErrorResponse("Something went wrong!", 500));
