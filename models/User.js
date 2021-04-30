@@ -79,10 +79,7 @@ UserSchema.methods.getSignedToken = function () {
     {
       id: this._id,
     },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_TOKEN_EXPIRE,
-    }
+    process.env.JWT_SECRET_AUTH
   );
 };
 
