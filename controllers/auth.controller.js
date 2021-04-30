@@ -176,7 +176,7 @@ exports.resetPassword = async (req, res, next) => {
     .createHash("sha256")
     .update(req.params.resetToken)
     .digest("hex");
-  console.log(resetPasswordToken);
+  // console.log(resetPasswordToken);
   try {
     const user = await User.findOne({
       resetPasswordToken,
@@ -184,10 +184,11 @@ exports.resetPassword = async (req, res, next) => {
     });
 
     if (!user) {
-      return next(new ErrorResponse("Invalid Reset Token", 400));
+      return next(new ErrorResponse("Invalid", 400));
     }
 
     user.password = req.body.password;
+    console.log(password);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
