@@ -41,6 +41,11 @@ const UserSchema = new mongoose.Schema({
     minLength: 6,
     select: false,
   },
+  typeOfUser: {
+    type: String,
+    default: "user",
+    select: false,
+  },
   emergencyContactNumbers: {
     emergencyContactOne: {
       type: String,
