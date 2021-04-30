@@ -108,7 +108,10 @@ ExpertSchema.methods.getSignedJwtToken = function () {
     {
       id: this._id,
     },
-    process.env.JWT_SECRET_AUTH
+    process.env.JWT_SECRET_AUTH,
+    {
+      expiresIn: process.env.JWT_TOKEN_EXPIRE,
+    }
   );
 };
 

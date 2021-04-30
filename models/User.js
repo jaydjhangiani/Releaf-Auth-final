@@ -38,7 +38,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, "Please provide a password."],
-    minLength: 6,
+    minLength: 8,
     select: false,
   },
   typeOfUser: {
@@ -84,7 +84,10 @@ UserSchema.methods.getSignedJwtToken = function () {
     {
       id: this._id,
     },
-    process.env.JWT_SECRET_AUTH
+    process.env.JWT_SECRET_AUTH,
+    {
+      expiresIn: process.env.JWT_TOKEN_EXPIRE,
+    }
   );
 };
 
