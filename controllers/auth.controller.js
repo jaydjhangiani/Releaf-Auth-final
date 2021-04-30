@@ -146,7 +146,7 @@ exports.forgotPassword = async (req, res, next) => {
 
     await user.save();
 
-    const resetUrl = `${rocess.env.FRONT_END_URI}/user/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONT_END_URI}/user/reset-password/${resetToken}`;
 
     try {
       console.log(email);
