@@ -172,11 +172,14 @@ exports.forgotPassword = async (req, res, next) => {
 };
 
 exports.resetPassword = async (req, res, next) => {
+  const { password } = req.body;
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.resetToken)
     .digest("hex");
-  // console.log(resetPasswordToken);
+
+  console.log(password);
+
   try {
     const user = await User.findOne({
       resetPasswordToken,
@@ -184,11 +187,10 @@ exports.resetPassword = async (req, res, next) => {
     });
 
     if (!user) {
-      return next(new ErrorResponse("Invalid", 400));
+      return next(new ErrorResponse("Invalid Token", 400));
     }
 
     user.password = req.body.password;
-    console.log(password);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
@@ -196,15 +198,16 @@ exports.resetPassword = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      data: "Password reset successfully!",
+      data: "Password Updated Success",
+      token: user.getSignedJwtToken(),
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
 
 const sendToken = (user, statusCode, res) => {
-  const token = user.getSignedToken();
+  const token = user.getSignedJwtToken();
   res.status(statusCode).json({
     success: true,
     token,
