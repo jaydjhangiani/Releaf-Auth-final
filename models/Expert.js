@@ -34,7 +34,6 @@ const ExpertSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a phone number."],
     unique: true,
-    select: false,
   },
   address: {
     type: String,
@@ -44,16 +43,19 @@ const ExpertSchema = new mongoose.Schema({
   city: {
     type: String,
     required: [true, "Please provide city."],
-    // select: false,
   },
   pinCode: {
     type: String,
     required: [true, "Please provide pin code."],
-    select: false,
   },
   displayName: {
     type: String,
     required: [true, "Please provide an display name."],
+    unique: true,
+  },
+  username: {
+    type: String,
+    required: [true, "Please provide an username."],
     unique: true,
   },
   password: {
@@ -65,12 +67,7 @@ const ExpertSchema = new mongoose.Schema({
   calendlyUsername: {
     type: String,
     unique: true,
-    // select: false,
     required: [true, "Please provide Calendly Username."],
-  },
-  podcastRss: {
-    type: String,
-    select: false,
   },
   verified: {
     type: Boolean,
@@ -78,6 +75,7 @@ const ExpertSchema = new mongoose.Schema({
   },
   resume: {
     type: String,
+    select: false,
     required: [true, "Please provide an profile picture."],
   },
   profilePicture: {

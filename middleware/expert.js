@@ -21,7 +21,7 @@ exports.expertProtect = async (req, res, next) => {
     const expert = await Expert.findById(decoded.id);
 
     if (!expert) {
-      return next(new ErrorResponse("No user found with this id", 404));
+      return next(new ErrorResponse("No Expert found with this id", 404));
     }
 
     req.expert = expert;
