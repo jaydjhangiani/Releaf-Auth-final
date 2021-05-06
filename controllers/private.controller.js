@@ -22,15 +22,12 @@ exports.getUser = async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  console.log(token);
-
   let decoded = jwt.verify(token, process.env.JWT_SECRET_AUTH);
 
   let _id = decoded.id;
 
   try {
     const user = await User.findOne({ _id });
-    console.log(user);
 
     if (user) {
       const userDetails = {
