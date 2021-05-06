@@ -30,13 +30,13 @@ exports.getUser = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ _id });
-
-    const userDetails = {
-      username: user.username,
-      typeOfUser: user.typeOfUser ? typeOfUser : "user",
-    };
+    console.log(user);
 
     if (user) {
+      const userDetails = {
+        username: user.username,
+        typeOfUser: "user",
+      };
       res.status(200).json({
         success: true,
         data: userDetails,
@@ -69,6 +69,7 @@ exports.getExpert = async (req, res, next) => {
     const expertDetails = {
       displayName: expert.displayName,
       photo: expert.profilePicture,
+      username: expert.username,
     };
 
     if (expert) {
