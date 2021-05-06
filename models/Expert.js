@@ -62,7 +62,6 @@ const ExpertSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a password."],
     minLength: 6,
-    select: false,
   },
   calendlyUsername: {
     type: String,
@@ -75,12 +74,11 @@ const ExpertSchema = new mongoose.Schema({
   },
   resume: {
     type: String,
-    select: false,
-    required: [true, "Please provide an profile picture."],
+    required: [true, "Please provide an resume."],
   },
   profilePicture: {
     type: String,
-    required: [true, "Please provide an resume."],
+    required: [true, "Please provide an profile picture."],
   },
 
   resetPasswordToken: String,
