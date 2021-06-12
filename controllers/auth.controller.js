@@ -5,62 +5,67 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 exports.register = async function (req, res, next) {
-  const {
-    firstName,
-    lastName,
-    username,
-    email,
-    phoneNumber,
-    password,
-  } = req.body;
+  const { firstName, lastName, username, email, phoneNumber, password } =
+    req.body;
   try {
     const user = await User.findOne({
-      $or: [
-        {
-          email: email,
-        },
-        {
-          username: username,
-        },
-      ],
+      username,
+      // $or: [
+      //   {
+      //     email: email,
+      //   },
+      //   {
+      //     username: username,
+      //   },
+      // ],
     });
 
     if (!user) {
-      const activateToken = jwt.sign(
-        {
+      // const activateToken = jwt.sign(
+      //   {
+      //     firstName,
+      //     lastName,
+      //     username,
+      //     email,
+      //     phoneNumber,
+      //     password,
+      //   },
+      //   process.env.JWT_SECRET,
+      //   {
+      //     expiresIn: "20min",
+      //   }
+      // );
+
+      // const activateUrl = `${process.env.FRONT_END_URI}/activate-account/${activateToken}`;
+
+      // const message = `
+      //       <h1>Activate Your Account</h1>
+      //       <p>Please go to this link to activate your account</p>
+      //       <a href=${activateUrl} clicktracking=off >${activateUrl}</a>
+      //       `;
+      try {
+        // await sendEmail({
+        //   to: email,
+        //   activationToken: activateUrl,
+        //   templateName: "activationEmail",
+        // });
+
+        // res.status(200).json({
+        //   success: true,
+        //   data: "email sent!",
+        // });
+        const user = await User.create({
           firstName,
           lastName,
           username,
           email,
           phoneNumber,
           password,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "20min",
-        }
-      );
-
-      const activateUrl = `${process.env.FRONT_END_URI}/activate-account/${activateToken}`;
-
-      const message = `
-            <h1>Activate Your Account</h1>
-            <p>Please go to this link to activate your account</p>
-            <a href=${activateUrl} clicktracking=off >${activateUrl}</a>
-            `;
-      try {
-        await sendEmail({
-          to: email,
-          activationToken: activateUrl,
-          templateName: "activationEmail",
         });
-
-        res.status(200).json({
-          success: true,
-          data: "email sent!",
-        });
+        sendToken(user, 201, res);
       } catch (error) {
-        return next(new ErrorResponse("Email Could not be sent!", 500));
+        return next(error);
+        // return next(new ErrorResponse("Email Could not be sent!", 500));
       }
     } else {
       return next(new ErrorResponse("User Already Exists", 409));
@@ -76,14 +81,8 @@ exports.activation = async (req, res, next) => {
 
   decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const {
-    firstName,
-    lastName,
-    username,
-    email,
-    phoneNumber,
-    password,
-  } = decoded;
+  const { firstName, lastName, username, email, phoneNumber, password } =
+    decoded;
 
   try {
     const user = await User.create({
@@ -106,16 +105,17 @@ exports.activation = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
+  // const { email, password } = req.body;
+  const { credential, password } = req.body;
+  if (!credential || !password) {
     return next(
-      new ErrorResponse("Please provide an email and password.", 400)
+      new ErrorResponse("Please provide a username and password.", 400)
     );
   }
 
   try {
-    const user = await User.findOne({ email }).select("+password");
+    const username = credential;
+    const user = await User.findOne({ username }).select("+password");
 
     if (!user) {
       return next(new ErrorResponse("Invlaid Credentials.", 401));
@@ -135,6 +135,7 @@ exports.login = async (req, res, next) => {
 
 exports.forgotPassword = async (req, res, next) => {
   const { email } = req.body;
+
   try {
     const user = await User.findOne({ email });
 
