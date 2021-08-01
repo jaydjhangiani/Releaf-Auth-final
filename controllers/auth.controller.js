@@ -9,63 +9,49 @@ exports.register = async function (req, res, next) {
     req.body;
   try {
     const user = await User.findOne({
-      username,
-      // $or: [
-      //   {
-      //     email: email,
-      //   },
-      //   {
-      //     username: username,
-      //   },
-      // ],
+      $or: [
+        {
+          email: email,
+        },
+        {
+          username: username,
+        },
+      ],
     });
 
     if (!user) {
-      // const activateToken = jwt.sign(
-      //   {
-      //     firstName,
-      //     lastName,
-      //     username,
-      //     email,
-      //     phoneNumber,
-      //     password,
-      //   },
-      //   process.env.JWT_SECRET,
-      //   {
-      //     expiresIn: "20min",
-      //   }
-      // );
-
-      // const activateUrl = `${process.env.FRONT_END_URI}/activate-account/${activateToken}`;
-
-      // const message = `
-      //       <h1>Activate Your Account</h1>
-      //       <p>Please go to this link to activate your account</p>
-      //       <a href=${activateUrl} clicktracking=off >${activateUrl}</a>
-      //       `;
-      try {
-        // await sendEmail({
-        //   to: email,
-        //   activationToken: activateUrl,
-        //   templateName: "activationEmail",
-        // });
-
-        // res.status(200).json({
-        //   success: true,
-        //   data: "email sent!",
-        // });
-        const user = await User.create({
+      const activateToken = jwt.sign(
+        {
           firstName,
           lastName,
           username,
           email,
           phoneNumber,
           password,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "20min",
+        }
+      );
+
+      const activateUrl = `${process.env.FRONT_END_URI}/activate-account/${activateToken}`;
+
+
+      try {
+        await sendEmail({
+          to: email,
+          activationToken: activateUrl,
+          templateName: "activationEmail",
         });
-        sendToken(user, 201, res);
+
+        res.status(200).json({
+          success: true,
+          data: "email sent!",
+        });
       } catch (error) {
-        return next(error);
-        // return next(new ErrorResponse("Email Could not be sent!", 500));
+        // return next(error);
+        return next(new ErrorResponse("Email Could not be sent!", 500));
       }
     } else {
       return next(new ErrorResponse("User Already Exists", 409));
@@ -79,7 +65,10 @@ exports.activation = async (req, res, next) => {
   const token = req.params.activateToken;
   const emergencyContactNumber = req.body;
 
+
   decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+  console.log(decoded)
 
   const { firstName, lastName, username, email, phoneNumber, password } =
     decoded;
