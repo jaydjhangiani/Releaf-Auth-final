@@ -37,7 +37,6 @@ exports.register = async function (req, res, next) {
 
       const activateUrl = `${process.env.FRONT_END_URI}/activate-account/${activateToken}`;
 
-
       try {
         await sendEmail({
           to: email,
@@ -65,10 +64,9 @@ exports.activation = async (req, res, next) => {
   const token = req.params.activateToken;
   const emergencyContactNumber = req.body;
 
-
   decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  console.log(decoded)
+  console.log(decoded);
 
   const { firstName, lastName, username, email, phoneNumber, password } =
     decoded;
@@ -94,17 +92,16 @@ exports.activation = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-  // const { email, password } = req.body;
-  const { credential, password } = req.body;
-  if (!credential || !password) {
+  const { email, password } = req.body;
+  //const { credential, password } = req.body;
+  if (!email || !password) {
     return next(
       new ErrorResponse("Please provide a username and password.", 400)
     );
   }
 
   try {
-    const username = credential;
-    const user = await User.findOne({ username }).select("+password");
+    const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
       return next(new ErrorResponse("Invlaid Credentials.", 401));
