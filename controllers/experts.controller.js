@@ -223,9 +223,9 @@ exports.changeStatusOfExpert = async (req, res, next) => {
 };
 
 exports.expertLogin = async (req, res, next) => {
-  // const { email, password } = req.body
-  const { credential, password } = req.body;
-  const email = credential;
+  const { email, password } = req.body;
+  // const { credential, password } = req.body;
+  // const email = credential;
 
   if (!email || !password) {
     return next(
