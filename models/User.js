@@ -22,17 +22,17 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please provide an email."],
-    // unique: true,
+    unique: true,
     select: false,
-    // match: [
-    //   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    //   "Please provide a valid email.",
-    // ],
+    match: [
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      "Please provide a valid email.",
+    ],
   },
   phoneNumber: {
     type: String,
     required: [true, "Please provide a phone number."],
-    // unique: true,
+    unique: true,
     select: false,
   },
   password: {
@@ -46,21 +46,21 @@ const UserSchema = new mongoose.Schema({
     default: "user",
     select: false,
   },
-  // emergencyContactNumbers: {
-  //   emergencyContactOne: {
-  //     type: String,
-  //     required: [true, "Please provide an emergency phone number."],
-  //     select: false,
-  //   },
-  //   emergencyContactTwo: {
-  //     type: String,
-  //     select: false,
-  //   },
-  //   emergencyContactThree: {
-  //     type: String,
-  //     select: false,
-  //   },
-  // },
+  emergencyContactNumbers: {
+    emergencyContactOne: {
+      type: String,
+      required: [true, "Please provide an emergency phone number."],
+      select: false,
+    },
+    emergencyContactTwo: {
+      type: String,
+      select: false,
+    },
+    emergencyContactThree: {
+      type: String,
+      select: false,
+    },
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });
@@ -106,7 +106,7 @@ UserSchema.methods.getResetPasswordToken = function () {
   return resetToken;
 };
 
-// const User = mongoose.model("User", UserSchema);
-const User = mongoose.model("TestingUser", UserSchema);
+const User = mongoose.model("User", UserSchema);
+// const User = mongoose.model("TestingUser", UserSchema);
 
 module.exports = User;
